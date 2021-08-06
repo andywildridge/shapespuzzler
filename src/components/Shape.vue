@@ -19,8 +19,6 @@
 </template>
 
 <script>
-// import cons from "./cons.js"; :style="{ background: shapeData.color }"
-
 function defnToCoords(defn) {
   const coords = defn.reduce((arr, row, rowIdx) => {
     row.forEach((col, colIdx) => {

@@ -5,6 +5,7 @@
     @mousemove="mousemove"
     class="stage"
   >
+    <Board :pegs="pegs" />
     <Shape
       v-for="(shape, index) in shapes"
       :key="index"
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import Board from "./Board.vue";
 import Shape from "./Shape.vue";
 import canPlace from "../utils/canPlace";
 import snap from "../utils/snap";
@@ -33,15 +35,16 @@ let lastValidPosition = {};
 export default {
   name: "Stage",
   components: {
+    Board,
     Shape,
   },
   props: {
     shapes: Array,
+    pegs: Array,
   },
-  computed: {
-    cssProps() {
-      return { "--bg-color": "red" };
-    },
+  created() {
+    gridPlacings.pegs = [...this.pegs].map((i) => ({ x: i.x + 2, y: i.y + 2 }));
+    console.log(gridPlacings);
   },
   data() {
     return {
@@ -92,6 +95,7 @@ export default {
       this.moveStart.y = null;
 
       let { x, y, rotate, gridCoords } = snap(this.shapeData, this.moveItem.id);
+      console.log(gridPlacings);
       if (canPlace(gridPlacings, gridCoords, this.moveItem.id)) {
         gridPlacings[this.moveItem.id] = gridCoords;
       } else {

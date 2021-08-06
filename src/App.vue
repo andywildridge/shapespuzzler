@@ -1,5 +1,5 @@
 <template>
-  <Stage :shapes="shapes" />
+  <Stage :shapes="shapes" :pegs="pegs" />
 </template>
 
 <script>
@@ -12,6 +12,10 @@ export default {
   },
   data() {
     return {
+      pegs: [
+        { x: 3, y: 1 },
+        { x: 5, y: 4 },
+      ],
       shapes: [
         {
           x: 100,
