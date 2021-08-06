@@ -20,7 +20,7 @@ export default {
         {
           x: 100,
           y: 0,
-          color: "red",
+          color: "yellow",
           defn: [
             [0, 1],
             [1, 1],
@@ -29,7 +29,7 @@ export default {
         {
           x: 60,
           y: 60,
-          color: "brown",
+          color: "beige",
           defn: [
             [0, 1],
             [1, 1],
@@ -38,7 +38,7 @@ export default {
         {
           x: 90,
           y: 160,
-          color: "blue",
+          color: "orange",
           defn: [
             [0, 1, 0],
             [1, 1, 1],
@@ -48,12 +48,22 @@ export default {
         {
           x: 190,
           y: 30,
-          color: "green",
+          color: "cadetblue",
           defn: [
             [0, 1, 0],
             [1, 1, 1],
           ],
         },
+        {
+          x: 190,
+          y: 30,
+          color: "cyan",
+          defn: [
+            [0, 1, 0, 0],
+            [1, 1, 1, 1],
+          ],
+        },
+
         {
           x: 290,
           y: 30,

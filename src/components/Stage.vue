@@ -1,4 +1,7 @@
 <template>
+  <div class="backstage">
+    <Board2 />
+  </div>
   <div
     @mouseup="mouseup"
     @mousedown="mousedown"
@@ -25,6 +28,7 @@
 
 <script>
 import Board from "./Board.vue";
+import Board2 from "./Board2.vue";
 import Shape from "./Shape.vue";
 import canPlace from "../utils/canPlace";
 import snap from "../utils/snap";
@@ -36,6 +40,7 @@ export default {
   name: "Stage",
   components: {
     Board,
+    Board2,
     Shape,
   },
   props: {
@@ -148,5 +153,14 @@ export default {
   left: 0;
   bottom: 0;
   right: 0;
+  filter: drop-shadow(2px 5px 4px #999);
+}
+.backstage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  filter: drop-shadow(2px 5px 4px #999);
 }
 </style>

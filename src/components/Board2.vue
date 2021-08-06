@@ -31,5 +31,6 @@ export default {
   width: 300px;
   height: 250px;
   pointer-events: none;
+  background: #ccc;
 }
 </style>
