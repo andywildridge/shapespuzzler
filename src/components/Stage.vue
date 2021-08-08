@@ -1,4 +1,5 @@
 <template>
+  <Board3 />
   <div class="backstage">
     <Board2 />
   </div>
@@ -15,11 +16,13 @@
       :id="index"
       @move="move"
       @rotate="rotate"
+      @flip="flip"
       :shapeData="shapeData[index]"
       :position="{
         x: shapeData[index].x,
         y: shapeData[index].y,
         z: shapeData[index].z,
+        size: shapeData[index].size,
         rotate: shapeData[index].rotate || 0,
       }"
     />
@@ -29,9 +32,12 @@
 <script>
 import Board from "./Board.vue";
 import Board2 from "./Board2.vue";
+import Board3 from "./Board3.vue";
 import Shape from "./Shape.vue";
 import canPlace from "../utils/canPlace";
+import gridComplete from "../utils/gridComplete";
 import snap from "../utils/snap";
+import unitSize from "../utils/unitSize";
 
 const gridPlacings = {};
 let lastValidPosition = {};
@@ -41,6 +47,7 @@ export default {
   components: {
     Board,
     Board2,
+    Board3,
     Shape,
   },
   props: {
@@ -48,14 +55,24 @@ export default {
     pegs: Array,
   },
   created() {
-    gridPlacings.pegs = [...this.pegs].map((i) => ({ x: i.x + 2, y: i.y + 2 }));
-    console.log(gridPlacings);
+    gridPlacings.pegs = [...this.pegs];
+    this.shapeData.forEach((shape, idx) => {
+      gridPlacings[idx] = snap(this.shapeData, idx).gridCoords;
+    });
   },
   data() {
     return {
       moveStart: { x: null, y: null },
       moveItem: null,
-      shapeData: [...this.shapes],
+      shapeData: this.shapes.map((shape) => {
+        const { x, y, color, defn } = shape;
+        return {
+          x: x * unitSize,
+          y: y * unitSize,
+          color,
+          defn,
+        };
+      }),
     };
   },
   methods: {
@@ -67,6 +84,7 @@ export default {
         startY: this.shapeData[id].y,
       };
       this.shapeData[this.moveItem.id].z = 1;
+      this.shapeData[this.moveItem.id].size = 1.025;
       lastValidPosition = {
         x: this.shapeData[this.moveItem.id].x,
         y: this.shapeData[this.moveItem.id].y,
@@ -82,11 +100,15 @@ export default {
         type: "rotate",
       };
       this.shapeData[this.moveItem.id].z = 1;
+      this.shapeData[this.moveItem.id].size = 1.025;
       lastValidPosition = {
         x: this.shapeData[this.moveItem.id].x,
         y: this.shapeData[this.moveItem.id].y,
         rotate: this.shapeData[this.moveItem.id].rotate,
       };
+    },
+    flip(id) {
+      console.log("flip", id);
     },
     mousedown(e) {
       this.moveStart.x = e.pageX;
@@ -100,7 +122,7 @@ export default {
       this.moveStart.y = null;
 
       let { x, y, rotate, gridCoords } = snap(this.shapeData, this.moveItem.id);
-      console.log(gridPlacings);
+      //console.log(gridPlacings);
       if (canPlace(gridPlacings, gridCoords, this.moveItem.id)) {
         gridPlacings[this.moveItem.id] = gridCoords;
       } else {
@@ -114,7 +136,11 @@ export default {
       this.shapeData[this.moveItem.id].y = y;
       this.shapeData[this.moveItem.id].rotate = rotate;
       this.shapeData[this.moveItem.id].z = 0;
+      this.shapeData[this.moveItem.id].size = 1;
       this.moveItem = null;
+      if (gridComplete(gridPlacings) === 36) {
+        console.log("GRID COMPLETE!");
+      }
     },
     mousemove(e) {
       if (this.moveItem === null) {

@@ -12,7 +12,8 @@
   width: 300px;
   height: 300px;
   pointer-events: none;
-  background-image: url("~@/assets/space.svg");
-  background-size: 16.6666%;
+  background: #fff0b8ad;
+  /* background-image: url("~@/assets/space2.svg");
+  background-size: 16.6666%; */
 }
 </style>

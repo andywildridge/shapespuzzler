@@ -26,10 +26,10 @@ export default {
 <style scoped>
 .board {
   position: absolute;
-  top: 100px;
-  left: 100px;
+  top: 0;
+  left: 0;
   width: 300px;
-  height: 250px;
+  height: 300px;
   pointer-events: none;
 }
 </style>

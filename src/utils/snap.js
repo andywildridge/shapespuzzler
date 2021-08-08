@@ -8,6 +8,7 @@ function snap(shapeData, id) {
   let rotate = shapeData[id].rotate
     ? (Math.round(shapeData[id].rotate / 90) * 90) % 360
     : 0;
+  // const flip = shapeData[id].flip ? true : false;
   if (rotate < 0) {
     rotate = 360 + rotate;
   }
@@ -29,6 +30,7 @@ function snap(shapeData, id) {
   const gridCoords = rotateArrayCoords(
     shapeData[id].defn,
     rotate,
+    // flip,
     gridX,
     gridY
   );

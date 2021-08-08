@@ -1,5 +1,12 @@
 <template>
-  <div ref="shape" @mousedown="mousedown" class="shape">
+  <div
+    ref="shape"
+    @mousedown="mousedown"
+    @mousemove="mousemove"
+    @mouseout="mouseout"
+    @dblclick="dblclick"
+    class="shape"
+  >
     <svg width="100%" :viewBox="viewbox">
       <g>
         <rect
@@ -9,7 +16,7 @@
           :y="coord.y + 0.02"
           width="0.975"
           height="0.975"
-          stroke="#555"
+          stroke="rgb(85 85 85 / 75%)"
           stroke-width="0.025"
           rx="0.1"
           :fill="shapeData.color"
@@ -21,6 +28,9 @@
 </template>
 
 <script>
+let handleSize = 10;
+let handleDirection = 1;
+
 function defnToCoords(defn) {
   const coords = defn.reduce((arr, row, rowIdx) => {
     row.forEach((col, colIdx) => {
@@ -42,7 +52,7 @@ export default {
   },
   watch: {
     position: function (newVal) {
-      this.render(newVal.x, newVal.y, newVal.rotate, 1, newVal.z);
+      this.render(newVal.x, newVal.y, newVal.rotate, newVal.size, newVal.z);
     },
   },
   mounted() {
@@ -65,6 +75,56 @@ export default {
     };
   },
   methods: {
+    mouseout() {
+      this.render(
+        this.shapeData.x,
+        this.shapeData.y,
+        this.shapeData.rotate,
+        this.shapeData.size,
+        this.shapeData.z
+      );
+      handleSize = 10;
+      handleDirection *= -1;
+    },
+    mousemove(e) {
+      if (e.target.dataset.target) {
+        const shapeElBCR = this.$refs.shape.getBoundingClientRect();
+        const segmentElBCR = e.target.getBoundingClientRect();
+        if (
+          (shapeElBCR.bottom - e.pageY < handleSize ||
+            shapeElBCR.top - e.pageY > -handleSize ||
+            shapeElBCR.right - e.pageX < handleSize ||
+            shapeElBCR.left - e.pageX > -handleSize) &&
+          ((segmentElBCR.top - e.pageY > -handleSize &&
+            segmentElBCR.left - e.pageX > -handleSize) ||
+            (segmentElBCR.top - e.pageY > -handleSize &&
+              segmentElBCR.right - e.pageX < handleSize) ||
+            (segmentElBCR.bottom - e.pageY < handleSize &&
+              segmentElBCR.left - e.pageX > -handleSize) ||
+            (segmentElBCR.bottom - e.pageY < handleSize &&
+              segmentElBCR.right - e.pageX < handleSize))
+        ) {
+          this.render(
+            this.shapeData.x,
+            this.shapeData.y,
+            this.shapeData.rotate + handleDirection,
+            this.shapeData.size,
+            this.shapeData.z
+          );
+          handleSize = 15;
+        } else {
+          this.render(
+            this.shapeData.x,
+            this.shapeData.y,
+            this.shapeData.rotate,
+            this.shapeData.size,
+            this.shapeData.z
+          );
+          handleSize = 10;
+          handleDirection *= -1;
+        }
+      }
+    },
     mousedown(e) {
       if (e.target.dataset.target) {
         const shapeElBCR = this.$refs.shape.getBoundingClientRect();
@@ -93,6 +153,9 @@ export default {
         // console.log("pos", this.shapeData);
       }
     },
+    dblclick() {
+      this.$emit("flip", this.id);
+    },
     render(x, y, rotation = 0, size = 1, z = 0) {
       const el = this.$refs.shape;
       const renderDefn = {
@@ -118,7 +181,11 @@ export default {
   height: 50px;
   pointer-events: none;
 }
+.shape.hover {
+  transform: rotate(2deg);
+}
 rect {
   pointer-events: initial;
+  background: url("~@/assets/wood.png");
 }
 </style>
