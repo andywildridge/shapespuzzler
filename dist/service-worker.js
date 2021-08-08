@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/shapespuzzler/precache-manifest.fb4131454f2d304310d9f91463a037c1.js"
+  "/dist/precache-manifest.32cf1303965a8e1adc491661125076d4.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "vuemove"});
