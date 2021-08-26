@@ -8,7 +8,7 @@
 .board {
   position: absolute;
   top: 100px;
-  left: 100px;
+  left: calc(50vw - 150px);
   width: 300px;
   height: 300px;
   pointer-events: none;

@@ -52,7 +52,14 @@ export default {
   },
   watch: {
     position: function (newVal) {
-      this.render(newVal.x, newVal.y, newVal.rotate, newVal.size, newVal.z);
+      this.render(
+        newVal.x,
+        newVal.y,
+        newVal.rotate,
+        newVal.size,
+        newVal.flip,
+        newVal.z
+      );
     },
   },
   mounted() {
@@ -81,6 +88,7 @@ export default {
         this.shapeData.y,
         this.shapeData.rotate,
         this.shapeData.size,
+        this.shapeData.flip,
         this.shapeData.z
       );
       handleSize = 10;
@@ -109,6 +117,7 @@ export default {
             this.shapeData.y,
             this.shapeData.rotate + handleDirection,
             this.shapeData.size,
+            this.shapeData.flip,
             this.shapeData.z
           );
           handleSize = 15;
@@ -118,6 +127,7 @@ export default {
             this.shapeData.y,
             this.shapeData.rotate,
             this.shapeData.size,
+            this.shapeData.flip,
             this.shapeData.z
           );
           handleSize = 10;
@@ -156,12 +166,13 @@ export default {
     dblclick() {
       this.$emit("flip", this.id);
     },
-    render(x, y, rotation = 0, size = 1, z = 0) {
+    render(x, y, rotation = 0, size = 1, flip = 1, z = 0) {
+      // console.log(flip);
       const el = this.$refs.shape;
       const renderDefn = {
         width: `${this.width * 50}px`,
         height: `${this.height * 50}px`,
-        transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${size})`,
+        transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${size}, ${flip})`,
         transformOrigin: "center",
         zIndex: z,
       };

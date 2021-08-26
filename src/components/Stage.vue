@@ -9,24 +9,28 @@
     @mousemove="mousemove"
     class="stage"
   >
-    <Board :pegs="pegs" />
-    <Shape
-      v-for="(shape, index) in shapes"
-      :key="index"
-      :id="index"
-      @move="move"
-      @rotate="rotate"
-      @flip="flip"
-      :shapeData="shapeData[index]"
-      :position="{
-        x: shapeData[index].x,
-        y: shapeData[index].y,
-        z: shapeData[index].z,
-        size: shapeData[index].size,
-        rotate: shapeData[index].rotate || 0,
-      }"
-    />
+    <div class="offSet">
+      <Board :pegs="pegs" />
+      <Shape
+        v-for="(shape, index) in shapes"
+        :key="index"
+        :id="index"
+        @move="move"
+        @rotate="rotate"
+        @flip="flip"
+        :shapeData="shapeData[index]"
+        :position="{
+          x: shapeData[index].x,
+          y: shapeData[index].y,
+          z: shapeData[index].z,
+          size: shapeData[index].size,
+          flip: shapeData[index].flip,
+          rotate: shapeData[index].rotate || 0,
+        }"
+      />
+    </div>
   </div>
+  <div v-if="completed">Completed!</div>
 </template>
 
 <script>
@@ -64,6 +68,7 @@ export default {
     return {
       moveStart: { x: null, y: null },
       moveItem: null,
+      completed: false,
       shapeData: this.shapes.map((shape) => {
         const { x, y, color, defn } = shape;
         return {
@@ -109,6 +114,14 @@ export default {
     },
     flip(id) {
       console.log("flip", id);
+      const flip = this.shapeData[id].flip ? this.shapeData[id].flip : 1;
+      lastValidPosition = {
+        x: this.shapeData[id].x,
+        y: this.shapeData[id].y,
+        rotate: this.shapeData[id].rotate,
+        flip: this.shapeData[id].flip,
+      };
+      this.shapeData[id].flip = flip * -1;
     },
     mousedown(e) {
       this.moveStart.x = e.pageX;
@@ -134,18 +147,24 @@ export default {
       }
       this.shapeData[this.moveItem.id].x = x;
       this.shapeData[this.moveItem.id].y = y;
+      console.log(x, y);
       this.shapeData[this.moveItem.id].rotate = rotate;
       this.shapeData[this.moveItem.id].z = 0;
       this.shapeData[this.moveItem.id].size = 1;
       this.moveItem = null;
       if (gridComplete(gridPlacings) === 36) {
         console.log("GRID COMPLETE!");
+        this.completed = true;
+      } else {
+        this.completed = false;
       }
     },
     mousemove(e) {
       if (this.moveItem === null) {
         return false;
       }
+      /* let stage = document.querySelector(".stage");
+      stage.getBoundingClientRect().left - */
       const x = e.pageX - this.moveStart.x;
       const y = e.pageY - this.moveStart.y;
       if (this.moveItem.type === "move") {
@@ -173,8 +192,15 @@ export default {
 </script>
 
 <style scoped>
+.offSet {
+  position: absolute;
+  top: 0;
+  left: calc(50vw - 250px);
+  bottom: 0;
+  right: 0;
+}
 .stage {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
@@ -182,9 +208,9 @@ export default {
   filter: drop-shadow(2px 5px 4px #999);
 }
 .backstage {
-  position: fixed;
+  position: absolute;
   top: 0;
-  left: 0;
+  left: calc(50vw - 250px);
   bottom: 0;
   right: 0;
   filter: drop-shadow(2px 5px 4px #999);

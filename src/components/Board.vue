@@ -28,8 +28,6 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 300px;
-  height: 300px;
   pointer-events: none;
 }
 </style>

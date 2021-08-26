@@ -3,6 +3,9 @@
 </template>
 
 <script>
+function randomBorder() {
+  return Math.round(Math.random() * 40) + 30;
+}
 export default {
   name: "Peg",
   props: {
@@ -13,6 +16,7 @@ export default {
       return {
         "--x": this.position.x * 50 + 2 + "px",
         "--y": this.position.y * 50 + 2 + "px",
+        "border-radius": `${randomBorder()}% ${randomBorder()}% ${randomBorder()}% ${randomBorder()}% / ${randomBorder()}% ${randomBorder()}% ${randomBorder()}% ${randomBorder()}%`,
       };
     },
   },
@@ -26,7 +30,6 @@ export default {
   height: 42px;
   left: var(--x);
   top: var(--y);
-  border-radius: 50%;
   pointer-events: none;
   background: #ff6464;
   border: 2px solid #616161;

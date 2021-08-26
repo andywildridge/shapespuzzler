@@ -8,10 +8,11 @@ function snap(shapeData, id) {
   let rotate = shapeData[id].rotate
     ? (Math.round(shapeData[id].rotate / 90) * 90) % 360
     : 0;
-  // const flip = shapeData[id].flip ? true : false;
   if (rotate < 0) {
     rotate = 360 + rotate;
   }
+
+  const flip = shapeData[id]?.flip ? shapeData[id].flip : 1;
 
   // offset height and width on rotate
   if (rotate % 180 === 90 && width !== height) {
@@ -27,8 +28,14 @@ function snap(shapeData, id) {
   const gridX = x / unitSize + snapOffset / unitSize;
   const gridY = y / unitSize - snapOffset / unitSize;
 
+  let defn = [...shapeData[id].defn];
+
+  if (flip === -1) {
+    defn = defn.reverse();
+  }
+
   const gridCoords = rotateArrayCoords(
-    shapeData[id].defn,
+    defn,
     rotate,
     // flip,
     gridX,
